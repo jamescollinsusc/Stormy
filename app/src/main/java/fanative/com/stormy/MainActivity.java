@@ -1,6 +1,8 @@
 package fanative.com.stormy;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.DrawableContainer;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -12,7 +14,11 @@ import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ImageView;
 import android.widget.Toast;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
 
@@ -26,6 +32,10 @@ public class MainActivity extends AppCompatActivity {
 
     //hello
     public static final String TAG = MainActivity.class.getSimpleName();
+    private CurrentWeather mCurrentWeather;
+    private ImageView iconView;
+    private int mIconID = R.drawable.snow;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
         Double latitude = 30.256045;
         Double longitude = -97.764027;
         String forecastUrl = "https://api.forecast.io/forecast/" + apiKey + "/" + latitude + "," + longitude;
-
+        iconView = (ImageView)findViewById(R.id.iconView);
         if (!networkAvailable()){
             Toast.makeText(this, R.string.noNetwork, Toast.LENGTH_LONG).show();
         }
@@ -55,20 +65,42 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void onResponse(Call call, Response response) throws IOException {
                     try {
-                        Log.v(TAG, response.body().string());
+                        String data = response.body().string();
+                        Log.v(TAG, data);
                         if (response.isSuccessful()) {
                             Log.v(TAG, getString(R.string.successMessage));
+                            mCurrentWeather = getCurrentDetails(data);
+                            mIconID = mCurrentWeather.getIconId();
                         } else {
                             alertUserError();
                         }
                     } catch (IOException e) {
                         Log.e(TAG, "Exception caught", e);
+                    } catch (JSONException e) {
+                        Log.e(TAG, "Exception caught", e);
                     }
                 }
             });
+            iconView.setImageResource(mIconID);
             Log.d(TAG, "IT RUNS");
         }
 
+    }
+
+    private CurrentWeather getCurrentDetails(String data) throws JSONException {
+        JSONObject forecast = new JSONObject(data);
+        String timezone = forecast.getString("timezone");
+        Log.i(TAG, "From JSON: " + timezone);
+        JSONObject currently = forecast.getJSONObject("currently");
+        String icon = currently.getString("icon");
+        Long time = currently.getLong("time");
+        Double temp = currently.getDouble("temperature");
+        Double humidity = currently.getDouble("humidity");
+        Double precip = currently.getDouble("precipProbability");
+        String summary = currently.getString("summary");
+        CurrentWeather currentWeather = new CurrentWeather(icon,time,temp,humidity,precip,summary,timezone);
+        Log.d(TAG, currentWeather.getFormattedTime());
+        return currentWeather;
     }
 
     private boolean networkAvailable() {
