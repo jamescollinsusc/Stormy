@@ -1,4 +1,9 @@
 <resources>
     <string name="app_name">Stormy</string>
     <string name="action_settings">Settings</string>
+    <string name="Error_Title">Network Error</string>
+    <string name="Error_Message">Could not reach Stormy servers</string>
+    <string name="PosButtonText">OK</string>
+    <string name="noNetwork">No network connection</string>
+    <string name="successMessage">Success!</string>
 </resources>
