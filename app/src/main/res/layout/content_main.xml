@@ -20,7 +20,9 @@
         android:text="Temp"
         android:id="@+id/tempView"
         android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true"/>
+        android:layout_centerHorizontal="true"
+        android:textColor="@android:color/white"
+        android:textSize="100sp"/>
 
     <TextView
         android:layout_width="wrap_content"
@@ -29,57 +31,41 @@
         android:id="@+id/timeView"
         android:layout_marginBottom="24dp"
         android:layout_above="@+id/tempView"
-        android:layout_centerHorizontal="true"/>
+        android:layout_centerHorizontal="true"
+        android:textColor="#b5ffffff"
+        android:textSize="20sp"/>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="HUMIDITY"
         android:id="@+id/humidityTitle"
-        android:layout_marginTop="51dp"
-        android:layout_marginRight="37dp"
-        android:layout_marginEnd="37dp"
+        android:layout_marginTop="42dp"
         android:layout_below="@+id/tempView"
-        android:layout_toLeftOf="@+id/tempView"
-        android:layout_toStartOf="@+id/tempView"/>
+        android:layout_alignLeft="@+id/tempView"
+        android:layout_alignStart="@+id/tempView"
+        android:textColor="#b5ffffff"/>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="PRECIPITATION"
         android:id="@+id/precipTitle"
-        android:layout_marginLeft="37dp"
-        android:layout_marginStart="37dp"
         android:layout_alignTop="@+id/humidityTitle"
-        android:layout_toRightOf="@+id/tempView"
-        android:layout_toEndOf="@+id/tempView"/>
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="0.88"
-        android:id="@+id/humidityData"
-        android:layout_below="@+id/humidityTitle"
-        android:layout_alignLeft="@+id/humidityTitle"
-        android:layout_alignStart="@+id/humidityTitle"/>
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="20%"
-        android:id="@+id/precipData"
-        android:layout_alignTop="@+id/humidityData"
-        android:layout_alignLeft="@+id/precipTitle"
-        android:layout_alignStart="@+id/precipTitle"/>
+        android:layout_alignRight="@+id/tempView"
+        android:layout_alignEnd="@+id/tempView"
+        android:textColor="#b5ffffff"/>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Partly Cloudy"
         android:id="@+id/summaryView"
+        android:layout_marginBottom="30dp"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="55dp"/>
+        android:textSize="20sp"
+        android:textColor="#ffffff"/>
 
     <TextView
         android:layout_width="wrap_content"
@@ -88,14 +74,32 @@
         android:id="@+id/cityView"
         android:layout_above="@+id/timeView"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="80dp"/>
+        android:layout_marginBottom="80dp"
+        android:textSize="20sp"
+        android:textColor="#ffffff"/>
 
     <ImageButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/imageButton"
+        android:id="@+id/refreshView"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="38dp"/>
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/degreeView"
+        android:layout_alignTop="@+id/tempView"
+        android:layout_alignRight="@+id/precipTitle"
+        android:layout_alignEnd="@+id/precipTitle"/>
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/iconView"
+        android:layout_below="@+id/refreshView"
+        android:layout_alignRight="@+id/humidityTitle"
+        android:layout_alignEnd="@+id/humidityTitle"/>
 
 </RelativeLayout>
