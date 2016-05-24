@@ -82,15 +82,15 @@ public class CurrentWeather {
     }
 
     public String getFormattedTime() {
-        SimpleDateFormat formatter = new SimpleDateFormat("H:mm");
+        SimpleDateFormat formatter = new SimpleDateFormat("h:mm a");
         formatter.setTimeZone(TimeZone.getTimeZone(getTimezone()));
         Date date = new Date(getTime()*1000);
         String timeString = formatter.format(date);
         return timeString;
     }
 
-    public double getTemp() {
-        return mTemp;
+    public int getTemp() {
+        return (int)Math.round(mTemp);
     }
 
     public void setTemp(double temp) {
@@ -106,8 +106,8 @@ public class CurrentWeather {
         mHumidity = humidity;
     }
 
-    public double getPrecip() {
-        return mPrecip;
+    public int getPrecip() {
+        return (int)Math.round(mPrecip*100);
     }
 
     public void setPrecip(double precip) {

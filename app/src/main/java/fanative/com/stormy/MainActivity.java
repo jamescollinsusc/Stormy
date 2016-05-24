@@ -14,7 +14,10 @@ import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.json.JSONException;
@@ -22,6 +25,8 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.OkHttpClient;
@@ -33,7 +38,18 @@ public class MainActivity extends AppCompatActivity {
     //hello
     public static final String TAG = MainActivity.class.getSimpleName();
     private CurrentWeather mCurrentWeather;
-    private ImageView iconView;
+    @BindView(R.id.tempView) TextView mTempView;
+    @BindView(R.id.timeView) TextView mTimeView;
+    @BindView(R.id.summaryView) TextView mSummaryView;
+    @BindView(R.id.cityView) TextView mCityView;
+    @BindView(R.id.refreshView) ImageButton mRefreshView;
+    @BindView(R.id.degreeView) ImageView mDegreeView;
+    @BindView(R.id.iconView) ImageView mIconView;
+    @BindView(R.id.humidityLabel) TextView mHumidityLabel;
+    @BindView(R.id.humidityValue) TextView mHumidityValue;
+    @BindView(R.id.precipLabel) TextView mPrecipLabel;
+    @BindView(R.id.precipValue) TextView mPrecipValue;
+    @BindView(R.id.progressBar) ProgressBar mProgressBar;
     private int mIconID = R.drawable.snow;
 
 
@@ -41,16 +57,32 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        ButterKnife.bind(this);
+        mProgressBar.setVisibility(View.INVISIBLE);
+        mCityView.setText("Austin, TX");
+        mHumidityLabel.setText("HUMIDITY");
+        mPrecipLabel.setText("PRECIPITATION");
+        mDegreeView.setImageResource(R.drawable.degree);
+        final Double latitude = 30.256045;
+        final Double longitude = -97.764027;
+        mRefreshView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getForecast(latitude,longitude);
+            }
+        });
+        getForecast(latitude,longitude);
+
+    }
+
+    private void getForecast (Double latitude, double longitude) {
         String apiKey = "b807704e94df3860c103b1fa0982494e";
-        Double latitude = 30.256045;
-        Double longitude = -97.764027;
         String forecastUrl = "https://api.forecast.io/forecast/" + apiKey + "/" + latitude + "," + longitude;
-        iconView = (ImageView)findViewById(R.id.iconView);
         if (!networkAvailable()){
             Toast.makeText(this, R.string.noNetwork, Toast.LENGTH_LONG).show();
         }
         else {
-
+            toggleProgressBar();
             OkHttpClient client = new OkHttpClient();
             Request request = new Request.Builder()
                     .url(forecastUrl)
@@ -64,12 +96,24 @@ public class MainActivity extends AppCompatActivity {
 
                 @Override
                 public void onResponse(Call call, Response response) throws IOException {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            toggleProgressBar();
+                        }
+                    });
                     try {
                         String data = response.body().string();
                         Log.v(TAG, data);
                         if (response.isSuccessful()) {
                             Log.v(TAG, getString(R.string.successMessage));
                             mCurrentWeather = getCurrentDetails(data);
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    updateDisplay();
+                                }
+                            });
                             mIconID = mCurrentWeather.getIconId();
                         } else {
                             alertUserError();
@@ -81,10 +125,29 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }
             });
-            iconView.setImageResource(mIconID);
+            mIconView.setImageResource(mIconID);
             Log.d(TAG, "IT RUNS");
         }
+    }
 
+    private void toggleProgressBar() {
+        if(mProgressBar.getVisibility()==View.INVISIBLE){
+            mProgressBar.setVisibility(View.VISIBLE);
+            mRefreshView.setVisibility(View.INVISIBLE);
+        }
+        else{
+            mProgressBar.setVisibility(View.INVISIBLE);
+            mRefreshView.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private void updateDisplay() {
+        mTempView.setText(mCurrentWeather.getTemp() + "");
+        mTimeView.setText(mCurrentWeather.getFormattedTime() + "");
+        mIconView.setImageResource(mCurrentWeather.getIconId());
+        mHumidityValue.setText(mCurrentWeather.getHumidity() + "");
+        mPrecipValue.setText(mCurrentWeather.getPrecip() + "%");
+        mSummaryView.setText(mCurrentWeather.getSummary() + "");
     }
 
     private CurrentWeather getCurrentDetails(String data) throws JSONException {
