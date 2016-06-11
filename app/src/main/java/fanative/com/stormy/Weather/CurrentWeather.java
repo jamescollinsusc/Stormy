@@ -1,9 +1,11 @@
-package fanative.com.stormy;
+package fanative.com.stormy.Weather;
 
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.TimeZone;
+
+import fanative.com.stormy.R;
 
 public class CurrentWeather {
     private String mIcon;

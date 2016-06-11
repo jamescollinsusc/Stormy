@@ -1,4 +1,4 @@
-package fanative.com.stormy;
+package fanative.com.stormy.Weather;
 
 
 public class HourlyWeather {

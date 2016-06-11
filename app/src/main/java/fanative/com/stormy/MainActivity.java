@@ -1,19 +1,12 @@
 package fanative.com.stormy;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
-import android.graphics.drawable.DrawableContainer;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -27,6 +20,9 @@ import java.io.IOException;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import fanative.com.stormy.UI.AlertDialogFragment;
+import fanative.com.stormy.Weather.CurrentWeather;
+import fanative.com.stormy.Weather.Forecast;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.OkHttpClient;
@@ -40,7 +36,6 @@ public class MainActivity extends AppCompatActivity {
 //    Twitter Search API
 //    Treehouse Blog API
     public static final String TAG = MainActivity.class.getSimpleName();
-    private CurrentWeather mCurrentWeather;
     @BindView(R.id.tempView) TextView mTempView;
     @BindView(R.id.timeView) TextView mTimeView;
     @BindView(R.id.summaryView) TextView mSummaryView;
@@ -54,6 +49,7 @@ public class MainActivity extends AppCompatActivity {
     @BindView(R.id.precipValue) TextView mPrecipValue;
     @BindView(R.id.progressBar) ProgressBar mProgressBar;
     private int mIconID = R.drawable.snow;
+    private Forecast mForecast;
 
 
     @Override
@@ -110,14 +106,14 @@ public class MainActivity extends AppCompatActivity {
                         Log.v(TAG, data);
                         if (response.isSuccessful()) {
                             Log.v(TAG, getString(R.string.successMessage));
-                            mCurrentWeather = getCurrentDetails(data);
+                            mForecast = getForecastDetails(data);
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
                                     updateDisplay();
                                 }
                             });
-                            mIconID = mCurrentWeather.getIconId();
+
                         } else {
                             alertUserError();
                         }
@@ -128,7 +124,7 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }
             });
-            mIconView.setImageResource(mIconID);
+
             Log.d(TAG, "IT RUNS");
         }
     }
@@ -145,12 +141,24 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void updateDisplay() {
-        mTempView.setText(mCurrentWeather.getTemp() + "");
-        mTimeView.setText(mCurrentWeather.getFormattedTime() + "");
-        mIconView.setImageResource(mCurrentWeather.getIconId());
-        mHumidityValue.setText(mCurrentWeather.getHumidity() + "");
-        mPrecipValue.setText(mCurrentWeather.getPrecip() + "%");
-        mSummaryView.setText(mCurrentWeather.getSummary() + "");
+        CurrentWeather current = mForecast.getCurrentWeather();
+        mIconID = current.getIconId();
+        mTempView.setText(current.getTemp() + "");
+        mTimeView.setText(current.getFormattedTime() + "");
+        mIconView.setImageResource(current.getIconId());
+        mHumidityValue.setText(current.getHumidity() + "");
+        mPrecipValue.setText(current.getPrecip() + "%");
+        mSummaryView.setText(current.getSummary() + "");
+        mIconView.setImageResource(mIconID);
+    }
+
+
+    private Forecast getForecastDetails(String JSONdata) throws JSONException{
+        Forecast forecast = new Forecast();
+        forecast.setCurrentWeather(getCurrentDetails(JSONdata));
+//        forecast.setHourlyWeather();
+//        forecast.setDailyWeather();
+        return forecast;
     }
 
     private CurrentWeather getCurrentDetails(String data) throws JSONException {
