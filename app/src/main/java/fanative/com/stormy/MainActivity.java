@@ -1,6 +1,7 @@
 package fanative.com.stormy;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -142,14 +143,14 @@ public class MainActivity extends AppCompatActivity {
 
     private void updateDisplay() {
         CurrentWeather current = mForecast.getCurrentWeather();
-        mIconID = current.getIconId();
         mTempView.setText(current.getTemp() + "");
         mTimeView.setText(current.getFormattedTime() + "");
         mIconView.setImageResource(current.getIconId());
         mHumidityValue.setText(current.getHumidity() + "");
         mPrecipValue.setText(current.getPrecip() + "%");
         mSummaryView.setText(current.getSummary() + "");
-        mIconView.setImageResource(mIconID);
+        Drawable drawable = getResources().getDrawable(current.getIconId());
+        mIconView.setImageDrawable(drawable);
     }
 
 
@@ -166,8 +167,8 @@ public class MainActivity extends AppCompatActivity {
         String timezone = forecast.getString("timezone");
         Log.i(TAG, "From JSON: " + timezone);
         JSONObject currently = forecast.getJSONObject("currently");
-        JSONObject hourly = forecast.getJSONObject("hourly");
-        JSONObject daily = forecast.getJSONObject("daily");
+//        JSONObject hourly = forecast.getJSONObject("hourly");
+//        JSONObject daily = forecast.getJSONObject("daily");
         String icon = currently.getString("icon");
         Long time = currently.getLong("time");
         Double temp = currently.getDouble("temperature");
@@ -176,6 +177,7 @@ public class MainActivity extends AppCompatActivity {
         String summary = currently.getString("summary");
         CurrentWeather currentWeather = new CurrentWeather(icon,time,temp,humidity,precip,summary,timezone);
         Log.d(TAG, currentWeather.getFormattedTime());
+        Log.d(TAG, currentWeather.getIcon());
         return currentWeather;
     }
 

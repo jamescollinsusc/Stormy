@@ -42,34 +42,34 @@ public class CurrentWeather {
     public int getIconId(){
         //clear-day, clear-night, rain, snow, sleet, wind, fog, cloudy, partly-cloudy-day, or partly-cloudy-night
         int iconID = R.drawable.clear_day;
-        if(mIcon == "clear-night") {
+        if(mIcon.equals("clear-night")) {
             iconID = R.drawable.clear_night;
         }
-        if(mIcon == "cloudy") {
+        if(mIcon.equals("cloudy")){
             iconID = R.drawable.cloudy;
         }
-        if(mIcon == "cloudy-night") {
+        if(mIcon.equals("cloudy-night")) {
             iconID = R.drawable.cloudy_night;
         }
-        if(mIcon == "fog") {
+        if(mIcon.equals("fog")) {
             iconID = R.drawable.fog;
         }
-        if(mIcon == "partly-cloudy") {
+        if(mIcon.equals("partly-cloudy")) {
             iconID = R.drawable.partly_cloudy;
         }
-        if(mIcon == "rain") {
+        if(mIcon.equals("rain")) {
             iconID = R.drawable.rain;
         }
-        if(mIcon == "sleet") {
+        if(mIcon.equals("sleet")) {
             iconID = R.drawable.sleet;
         }
-        if(mIcon == "snow") {
+        if(mIcon.equals("snow")) {
             iconID = R.drawable.snow;
         }
-        if(mIcon == "sunny") {
+        if(mIcon.equals("sunny")) {
             iconID = R.drawable.sunny;
         }
-        if(mIcon == "wind") {
+        if(mIcon.equals("wind")) {
             iconID = R.drawable.wind;
         }
         return iconID;
