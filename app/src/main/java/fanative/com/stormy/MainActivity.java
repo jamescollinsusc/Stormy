@@ -35,7 +35,10 @@ import okhttp3.Response;
 
 public class MainActivity extends AppCompatActivity {
 
-    //hello
+    //POPULAR APIS
+//    YouTube API
+//    Twitter Search API
+//    Treehouse Blog API
     public static final String TAG = MainActivity.class.getSimpleName();
     private CurrentWeather mCurrentWeather;
     @BindView(R.id.tempView) TextView mTempView;
@@ -155,6 +158,8 @@ public class MainActivity extends AppCompatActivity {
         String timezone = forecast.getString("timezone");
         Log.i(TAG, "From JSON: " + timezone);
         JSONObject currently = forecast.getJSONObject("currently");
+        JSONObject hourly = forecast.getJSONObject("hourly");
+        JSONObject daily = forecast.getJSONObject("daily");
         String icon = currently.getString("icon");
         Long time = currently.getLong("time");
         Double temp = currently.getDouble("temperature");
